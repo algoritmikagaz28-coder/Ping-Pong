@@ -41,9 +41,28 @@ class Player(GameSprite):
             self.rect.x -= self.speed
         if keys[K_UP] and self.rect.x < win_width - 85:
             self.rect.x += self.speed
+class Wall(sprite.Sprite):
+    def __init__(self, color1, color2, color3, wall_x, wall_y, wall_width, wall_height):
+        super().__init__()
+        self.color1 = color1
+        self.color2 = color2
+        self.color3 = color3
+        self.width = wall_width
+        self.height = wall_height
+        self.image = Surface((self.width, self.height))
+        self.image.fill((color1, color2, color3))
+        self.rect = self.image.get_rect()
+        self.rect.x = wall_x
+        self.rect.y = wall_y
+    def draw_wall(self):
+        window.blit(self.image, (self.rect.x, self.rect.y))
 racketR = Player('racket.png', 5, win_height - 100, 80, 100, 10)
 racketL = Player('racket.png', 5, win_height - 100, 80, 100, 10)
 ball = GameSprite('It_is _not_a_circle.', 5, win_height, 80, 5, 10)
+wall_right = Wall(152, 251, 152, 700, 500, 2, 2)
+wall_left = Wall(152, 251, 152, 700, 500, 2, 2)
+wall_up = Wall(152, 251, 152, 700, 500, 2, 2)
+wall_bottom = Wall(152, 251, 152, 2, 2, 700, 500)
 clock = time.Clock()
 FPS = 60
 game = True
@@ -59,6 +78,10 @@ while game:
         racketR.reset()
         racketL.updateL()
         racketL.reset()
+        wall_right.draw_wall()
+        wall_left.draw_wall()
+        wall_up.draw_wall()
+        wall_bottom.draw_wall()
         if sprite.spritecollide(racketR, ball, False) or sprite.spritecollide(racketL, ball, False):
             finish = True
             window.blit(text_game_over, (230, 200))
